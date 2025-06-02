@@ -8,10 +8,10 @@
     <style>
         html { font-size: 15px; }
         body { font-family: Arial, sans-serif; background: #f7f7fa; margin: 0; padding: 0;}
-        .container { background: #fff; max-width: 430px; margin: 32px auto; padding: 24px 18px 18px 18px; border-radius: 14px; box-shadow: 0 2px 14px #0001; }
+        .container { background: #fff; max-width: 510px; margin: 32px auto; padding: 28px 24px 20px 24px; border-radius: 14px; box-shadow: 0 2px 14px #0001; }
         .logos { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
         .logos .niteroi { height: 70px; max-width: 210px; }
-        .logos .casa { height: 42px; max-width: 100px; }
+        .logos .casa { height: 42px; max-width: 100px; margin-left: 70px; }
         h1 { text-align: center; color: #195bb5; margin-bottom: 7px; font-size: 1.2em;}
         .tabs { display: flex; margin-bottom: 18px; }
         .tab-btn {
@@ -42,10 +42,10 @@
         .botao:hover { background: #195bb5dd; }
         .instrucoes { font-size: 0.99em; background: #e7f3fa; color: #15364d; padding: 12px 13px; border-radius: 7px; margin-bottom: 14px;}
         .obs { font-size: 0.95em; margin-top: 9px; color: #333; background: #e9f2fd; padding: 7px 9px; border-radius: 6px;}
-        @media (max-width: 600px) {
+        @media (max-width: 700px) {
             .container { max-width: 99vw; padding: 4vw 2vw; }
             .logos .niteroi { height: 38px; max-width: 100px;}
-            .logos .casa { height: 23px; max-width: 48px;}
+            .logos .casa { height: 23px; max-width: 48px; margin-left: 18px;}
             .tabs { font-size: .99em; }
         }
     </style>
@@ -73,7 +73,7 @@
                     <span style="color:#195bb5">((Proficiência - 49) / (324 - 49)) × 10</span>
                 </li>
                 <li>
-                    <b>IDEB:</b> Média das Notas Padronizadas × Taxa de Rendimento ÷ 10
+                    <b>IDEB:</b> Média das Notas Padronizadas × Taxa de Rendimento ÷ 100
                 </li>
                 <li>
                     <b>Nível de Proficiência Adequado:</b> LP ≥ 200 | Matemática ≥ 225
@@ -121,7 +121,7 @@
                     <span style="color:#195bb5">((Proficiência - 100) / (400 - 100)) × 10</span>
                 </li>
                 <li>
-                    <b>IDEB:</b> Média das Notas Padronizadas × Taxa de Rendimento ÷ 10
+                    <b>IDEB:</b> Média das Notas Padronizadas × Taxa de Rendimento ÷ 100
                 </li>
                 <li>
                     <b>Nível de Proficiência Adequado:</b> LP ≥ 275 | Matemática ≥ 300
@@ -185,17 +185,15 @@ function calculaIDEBIniciais() {
     const mat_ini = parseFloat(document.getElementById('mat_ini').value.replace(',','.'));
     const rendimento_ini = parseFloat(document.getElementById('rendimento_ini').value.replace(',','.'));
 
-    // Nota Padronizada
     document.getElementById('nota_pad_ini_lp').innerText = notaPadronizadaIniciais(lp_ini);
     document.getElementById('nota_pad_ini_mat').innerText = notaPadronizadaIniciais(mat_ini);
 
-    // IDEB = média das notas padronizadas × rendimento / 10
     const nota_lp = parseFloat(notaPadronizadaIniciais(lp_ini).replace(',','.'));
     const nota_mat = parseFloat(notaPadronizadaIniciais(mat_ini).replace(',','.'));
     let ideb_ini = "-";
     if (!isNaN(rendimento_ini) && !isNaN(nota_lp) && !isNaN(nota_mat)) {
         const media = ((nota_lp + nota_mat) / 2);
-        ideb_ini = ((media * rendimento_ini) / 10).toFixed(2).replace('.',',');
+        ideb_ini = ((media * rendimento_ini) / 100).toFixed(2).replace('.',',');
     }
     document.getElementById('ideb_ini').innerText = ideb_ini;
 }
@@ -205,17 +203,15 @@ function calculaIDEBFinais() {
     const mat_fin = parseFloat(document.getElementById('mat_fin').value.replace(',','.'));
     const rendimento_fin = parseFloat(document.getElementById('rendimento_fin').value.replace(',','.'));
 
-    // Nota Padronizada
     document.getElementById('nota_pad_fin_lp').innerText = notaPadronizadaFinais(lp_fin);
     document.getElementById('nota_pad_fin_mat').innerText = notaPadronizadaFinais(mat_fin);
 
-    // IDEB = média das notas padronizadas × rendimento / 10
     const nota_lp = parseFloat(notaPadronizadaFinais(lp_fin).replace(',','.'));
     const nota_mat = parseFloat(notaPadronizadaFinais(mat_fin).replace(',','.'));
     let ideb_fin = "-";
     if (!isNaN(rendimento_fin) && !isNaN(nota_lp) && !isNaN(nota_mat)) {
         const media = ((nota_lp + nota_mat) / 2);
-        ideb_fin = ((media * rendimento_fin) / 10).toFixed(2).replace('.',',');
+        ideb_fin = ((media * rendimento_fin) / 100).toFixed(2).replace('.',',');
     }
     document.getElementById('ideb_fin').innerText = ideb_fin;
 }
@@ -232,5 +228,3 @@ document.getElementById('btnCalcularFin').addEventListener('click', calculaIDEBF
 </script>
 </body>
 </html>
-
-
