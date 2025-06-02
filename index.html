@@ -51,24 +51,17 @@
             </tr>
             <tr>
                 <th>Média de Proficiência</th>
-                <td><input type="number" step="0.01" min="0" max="10" id="lp_ini" placeholder="LP"></td>
-                <td><input type="number" step="0.01" min="0" max="10" id="mat_ini" placeholder="MAT"></td>
-                <td><input type="number" step="0.01" min="0" max="10" id="lp_fin" placeholder="LP"></td>
-                <td><input type="number" step="0.01" min="0" max="10" id="mat_fin" placeholder="MAT"></td>
-            </tr>
-            <tr>
-                <th>Média de Proficiência Padronizada</th>
-                <td id="padronizada_ini_lp">-</td>
-                <td id="padronizada_ini_mat">-</td>
-                <td id="padronizada_fin_lp">-</td>
-                <td id="padronizada_fin_mat">-</td>
+                <td><input type="number" step="0.01" min="0" max="400" id="lp_ini" placeholder="LP"></td>
+                <td><input type="number" step="0.01" min="0" max="400" id="mat_ini" placeholder="MAT"></td>
+                <td><input type="number" step="0.01" min="0" max="400" id="lp_fin" placeholder="LP"></td>
+                <td><input type="number" step="0.01" min="0" max="400" id="mat_fin" placeholder="MAT"></td>
             </tr>
             <tr>
                 <th>Nota Padronizada</th>
-                <td id="nota_pad_ini">-</td>
-                <td></td>
-                <td id="nota_pad_fin">-</td>
-                <td></td>
+                <td id="nota_pad_ini_lp">-</td>
+                <td id="nota_pad_ini_mat">-</td>
+                <td id="nota_pad_fin_lp">-</td>
+                <td id="nota_pad_fin_mat">-</td>
             </tr>
             <tr>
                 <th>Taxa de Rendimento (%)</th>
@@ -97,9 +90,13 @@
     Casa de Avaliação & Prefeitura de Niterói
 </div>
 <script>
-function padronizar(proficiencia, corte) {
-    // Exemplo: diferença simples (ajuste conforme sua metodologia)
-    return (proficiencia && corte) ? (proficiencia - corte).toFixed(2) : "-";
+function notaPadronizadaIniciais(proficiencia) {
+    if (isNaN(proficiencia)) return "-";
+    return (((proficiencia - 49) / (324 - 49)) * 10).toFixed(2).replace('.',',');
+}
+function notaPadronizadaFinais(proficiencia) {
+    if (isNaN(proficiencia)) return "-";
+    return (((proficiencia - 100) / (400 - 100)) * 10).toFixed(2).replace('.',',');
 }
 
 function calculaIDEB() {
@@ -111,27 +108,25 @@ function calculaIDEB() {
     const rendimento_ini = parseFloat(document.getElementById('rendimento_ini').value.replace(',','.'));
     const rendimento_fin = parseFloat(document.getElementById('rendimento_fin').value.replace(',','.'));
 
-    // Padronização: cortes
-    const corte_lp_ini = 200, corte_mat_ini = 225, corte_lp_fin = 275, corte_mat_fin = 300;
+    // Nota Padronizada para cada disciplina
+    document.getElementById('nota_pad_ini_lp').innerText = notaPadronizadaIniciais(lp_ini);
+    document.getElementById('nota_pad_ini_mat').innerText = notaPadronizadaIniciais(mat_ini);
+    document.getElementById('nota_pad_fin_lp').innerText = notaPadronizadaFinais(lp_fin);
+    document.getElementById('nota_pad_fin_mat').innerText = notaPadronizadaFinais(mat_fin);
 
-    // Padronização (visual)
-    document.getElementById('padronizada_ini_lp').innerText = isNaN(lp_ini) ? "-" : padronizar(lp_ini, corte_lp_ini);
-    document.getElementById('padronizada_ini_mat').innerText = isNaN(mat_ini) ? "-" : padronizar(mat_ini, corte_mat_ini);
-    document.getElementById('padronizada_fin_lp').innerText = isNaN(lp_fin) ? "-" : padronizar(lp_fin, corte_lp_fin);
-    document.getElementById('padronizada_fin_mat').innerText = isNaN(mat_fin) ? "-" : padronizar(mat_fin, corte_mat_fin);
-
-    // Nota Padronizada (só LP como exemplo)
-    document.getElementById('nota_pad_ini').innerText = (!isNaN(lp_ini) && !isNaN(corte_lp_ini)) ? padronizar(lp_ini, corte_lp_ini) : "-";
-    document.getElementById('nota_pad_fin').innerText = (!isNaN(lp_fin) && !isNaN(corte_lp_fin)) ? padronizar(lp_fin, corte_lp_fin) : "-";
-
-    // IDEB = (Taxa de rendimento x média das proficiências) / 10
+    // IDEB = (Taxa de rendimento x média das proficiências padronizadas) / 10
     let ideb_ini = "-", ideb_fin = "-";
-    if (!isNaN(rendimento_ini) && !isNaN(lp_ini) && !isNaN(mat_ini)) {
-        const mediaIni = ((lp_ini + mat_ini) / 2);
+    // Para IDEB usamos a média das notas padronizadas!
+    const nota_ini_lp = parseFloat(notaPadronizadaIniciais(lp_ini).replace(',','.'));
+    const nota_ini_mat = parseFloat(notaPadronizadaIniciais(mat_ini).replace(',','.'));
+    if (!isNaN(rendimento_ini) && !isNaN(nota_ini_lp) && !isNaN(nota_ini_mat)) {
+        const mediaIni = ((nota_ini_lp + nota_ini_mat) / 2);
         ideb_ini = ((rendimento_ini * mediaIni) / 10).toFixed(2).replace('.',',');
     }
-    if (!isNaN(rendimento_fin) && !isNaN(lp_fin) && !isNaN(mat_fin)) {
-        const mediaFin = ((lp_fin + mat_fin) / 2);
+    const nota_fin_lp = parseFloat(notaPadronizadaFinais(lp_fin).replace(',','.'));
+    const nota_fin_mat = parseFloat(notaPadronizadaFinais(mat_fin).replace(',','.'));
+    if (!isNaN(rendimento_fin) && !isNaN(nota_fin_lp) && !isNaN(nota_fin_mat)) {
+        const mediaFin = ((nota_fin_lp + nota_fin_mat) / 2);
         ideb_fin = ((rendimento_fin * mediaFin) / 10).toFixed(2).replace('.',',');
     }
     document.getElementById('ideb_ini').innerText = ideb_ini;
@@ -148,4 +143,3 @@ document.getElementById('btnCalcular').addEventListener('click', calculaIDEB);
 </script>
 </body>
 </html>
-
