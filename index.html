@@ -4,36 +4,39 @@
     <meta charset="UTF-8">
     <title>SIMULADOR IDEB</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
     <style>
-        html { font-size: 18px; }
+        html { font-size: 15px; }
         body { font-family: Arial, sans-serif; background: #f7f7fa; margin: 0; padding: 0;}
-        .container { background: #fff; max-width: 900px; margin: 32px auto; padding: 38px 28px 22px 28px; border-radius: 18px; box-shadow: 0 2px 22px #0002; }
-        .logos { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-        .logos img { height: 75px; max-width: 220px; }
-        h1 { text-align: center; color: #195bb5; margin-bottom: 12px; font-size: 2em;}
-        table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 1.15em;}
-        th, td { border: 1px solid #ccc; padding: 9px 6px; text-align: center;}
-        th { background: #f0f4fa; }
-        input[type="number"] { width: 85px; padding: 5px 7px; font-size: 1.03em; border: 1px solid #bbb; border-radius: 4px;}
-        .botao { margin: 18px auto 10px auto; display: block; padding: 12px 32px; background: #195bb5; color: #fff; font-size: 1.13em; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;}
+        .container { background: #fff; max-width: 900px; margin: 32px auto; padding: 30px 20px 16px 20px; border-radius: 16px; box-shadow: 0 2px 18px #0001; }
+        .logos { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+        .logos .niteroi { height: 86px; max-width: 265px; }
+        .logos .casa { height: 48px; max-width: 120px; }
+        h1 { text-align: center; color: #195bb5; margin-bottom: 9px; font-size: 1.35em;}
+        table { width: 100%; border-collapse: collapse; margin: 10px 0 5px 0; font-size: 1em;}
+        th, td { border: 1px solid #d2d6e0; padding: 6px 4px; text-align: center;}
+        th { background: #f0f4fa; font-weight: 600;}
+        input[type="number"] { width: 65px; padding: 4px 5px; font-size: 0.98em; border: 1px solid #bbb; border-radius: 4px;}
+        .botao { margin: 15px auto 7px auto; display: block; padding: 10px 22px; background: #195bb5; color: #fff; font-size: 1em; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;}
         .botao:hover { background: #195bb5dd; }
-        .obs { font-size: 1.08em; margin-top: 24px; color: #333; background: #e9f2fd; padding: 10px 13px; border-radius: 6px;}
-        .footer { text-align: center; margin-top: 30px; font-size: 1em; color: #888; }
+        .obs { font-size: 0.95em; margin-top: 16px; color: #333; background: #e9f2fd; padding: 7px 9px; border-radius: 6px;}
+        .footer { text-align: center; margin-top: 20px; font-size: 0.93em; color: #888; }
         @media (max-width: 900px) {
-            .container { padding: 6px; margin: 7px;}
-            .logos img { height: 43px; max-width: 130px;}
-            html { font-size: 16px; }
+            .container { padding: 3px; margin: 5px;}
+            .logos .niteroi { height: 54px; max-width: 140px;}
+            .logos .casa { height: 32px; max-width: 70px;}
+            html { font-size: 13px; }
         }
     </style>
 </head>
 <body>
 <div class="container">
     <div class="logos">
-        <img src="niteroi.png" alt="Prefeitura de Niterói">
-        <img src="casa.png" alt="Casa de Avaliação">
+        <img src="niteroi.png" alt="Prefeitura de Niterói" class="niteroi">
+        <img src="casa.png" alt="Casa de Avaliação" class="casa">
     </div>
     <h1>SIMULADOR IDEB</h1>
-    <form id="simuladorIDEB" onsubmit="calculaIDEB(); return false;">
+    <form id="simuladorIDEB" autocomplete="off">
         <table>
             <tr>
                 <th rowspan="2"></th>
@@ -82,7 +85,7 @@
                 <td id="ideb_fin" colspan="2">0,0</td>
             </tr>
         </table>
-        <button class="botao" type="submit">Calcular</button>
+        <button class="botao" type="button" id="btnCalcular">Calcular</button>
     </form>
     <div class="obs">
         <b>Obs.:</b> Nível de Proficiência Adequado<br>
@@ -95,14 +98,12 @@
 </div>
 <script>
 function padronizar(proficiencia, corte) {
-    // Simulação de padronização linear para exemplo; substitua pela fórmula correta se houver.
-    // Fórmula: Nota Padronizada = (Proficiência - Corte) / Desvio padrão hipotético
-    // Aqui usamos só a diferença para exibir (exemplo visual)
+    // Exemplo: diferença simples (ajuste conforme sua metodologia)
     return (proficiencia && corte) ? (proficiencia - corte).toFixed(2) : "-";
 }
 
 function calculaIDEB() {
-    // Entrada
+    // Entradas
     const lp_ini = parseFloat(document.getElementById('lp_ini').value.replace(',','.'));
     const mat_ini = parseFloat(document.getElementById('mat_ini').value.replace(',','.'));
     const lp_fin = parseFloat(document.getElementById('lp_fin').value.replace(',','.'));
@@ -113,17 +114,38 @@ function calculaIDEB() {
     // Padronização: cortes
     const corte_lp_ini = 200, corte_mat_ini = 225, corte_lp_fin = 275, corte_mat_fin = 300;
 
-    // Preencher padronização individual
+    // Padronização (visual)
     document.getElementById('padronizada_ini_lp').innerText = isNaN(lp_ini) ? "-" : padronizar(lp_ini, corte_lp_ini);
     document.getElementById('padronizada_ini_mat').innerText = isNaN(mat_ini) ? "-" : padronizar(mat_ini, corte_mat_ini);
     document.getElementById('padronizada_fin_lp').innerText = isNaN(lp_fin) ? "-" : padronizar(lp_fin, corte_lp_fin);
     document.getElementById('padronizada_fin_mat').innerText = isNaN(mat_fin) ? "-" : padronizar(mat_fin, corte_mat_fin);
 
-    // Nota Padronizada (só para LP como exemplo; adapte se quiser outra lógica)
+    // Nota Padronizada (só LP como exemplo)
     document.getElementById('nota_pad_ini').innerText = (!isNaN(lp_ini) && !isNaN(corte_lp_ini)) ? padronizar(lp_ini, corte_lp_ini) : "-";
     document.getElementById('nota_pad_fin').innerText = (!isNaN(lp_fin) && !isNaN(corte_lp_fin)) ? padronizar(lp_fin, corte_lp_fin) : "-";
 
     // IDEB = (Taxa de rendimento x média das proficiências) / 10
     let ideb_ini = "-", ideb_fin = "-";
     if (!isNaN(rendimento_ini) && !isNaN(lp_ini) && !isNaN(mat_ini)) {
-        const mediaIni = ((lp_ini + m_
+        const mediaIni = ((lp_ini + mat_ini) / 2);
+        ideb_ini = ((rendimento_ini * mediaIni) / 10).toFixed(2).replace('.',',');
+    }
+    if (!isNaN(rendimento_fin) && !isNaN(lp_fin) && !isNaN(mat_fin)) {
+        const mediaFin = ((lp_fin + mat_fin) / 2);
+        ideb_fin = ((rendimento_fin * mediaFin) / 10).toFixed(2).replace('.',',');
+    }
+    document.getElementById('ideb_ini').innerText = ideb_ini;
+    document.getElementById('ideb_fin').innerText = ideb_fin;
+}
+
+// Cálculo no clique do botão
+document.getElementById('btnCalcular').addEventListener('click', calculaIDEB);
+
+// Cálculo automático ao digitar
+['lp_ini','mat_ini','lp_fin','mat_fin','rendimento_ini','rendimento_fin'].forEach(id => {
+    document.getElementById(id).addEventListener('input', calculaIDEB);
+});
+</script>
+</body>
+</html>
+
