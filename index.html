@@ -40,7 +40,7 @@
         input[type="number"] { width: 72px; padding: 4px 5px; font-size: 1em; border: 1px solid #bbb; border-radius: 4px;}
         .botao { margin: 10px auto 7px auto; display: block; padding: 8px 15px; background: #195bb5; color: #fff; font-size: 1em; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;}
         .botao:hover { background: #195bb5dd; }
-        .instrucoes { font-size: 0.99em; background: #e7f3fa; color: #15364d; padding: 12px 13px; border-radius: 7px; margin-bottom: 18px;}
+        .instrucoes { font-size: 0.99em; background: #e7f3fa; color: #15364d; padding: 12px 13px; border-radius: 7px; margin-bottom: 14px;}
         .obs { font-size: 0.95em; margin-top: 9px; color: #333; background: #e9f2fd; padding: 7px 9px; border-radius: 6px;}
         @media (max-width: 600px) {
             .container { max-width: 99vw; padding: 4vw 2vw; }
@@ -57,30 +57,29 @@
         <img src="casa.png" alt="Casa de Avaliação" class="casa">
     </div>
     <h1>SIMULADOR IDEB</h1>
-    <div class="instrucoes">
-        <b>Como funciona?</b><br>
-        <ul style="padding-left: 20px; margin: 7px 0 0 0;">
-            <li>Preencha as proficiências de <b>LP</b> (Língua Portuguesa) e <b>Matemática</b> (<b>0 a 400</b>).</li>
-            <li>Preencha a <b>Taxa de Rendimento (%)</b> (ex: 94.3).</li>
-            <li>
-                <b>Nota Padronizada Anos Iniciais</b>: <br>
-                <span style="color:#195bb5">((Proficiência - 49) / (324 - 49)) × 10</span>
-            </li>
-            <li>
-                <b>Nota Padronizada Anos Finais</b>: <br>
-                <span style="color:#195bb5">((Proficiência - 100) / (400 - 100)) × 10</span>
-            </li>
-            <li>
-                <b>IDEB</b>: Média das Notas Padronizadas × Taxa de Rendimento ÷ 10
-            </li>
-        </ul>
-    </div>
     <div class="tabs">
         <button type="button" class="tab-btn active" onclick="showTab(0)">Anos Iniciais</button>
         <button type="button" class="tab-btn" onclick="showTab(1)">Anos Finais</button>
     </div>
     <!-- ANOS INICIAIS -->
     <div class="tab-content active" id="tab0">
+        <div class="instrucoes" id="inst0">
+            <b>Como calcular IDEB – Anos Iniciais:</b>
+            <ul style="padding-left: 20px; margin: 7px 0 0 0;">
+                <li>Preencha as proficiências de <b>LP</b> e <b>Matemática</b> (<b>0 a 400</b>).</li>
+                <li>Preencha a <b>Taxa de Rendimento (%)</b> (ex: 93.2).</li>
+                <li>
+                    <b>Nota Padronizada:</b><br>
+                    <span style="color:#195bb5">((Proficiência - 49) / (324 - 49)) × 10</span>
+                </li>
+                <li>
+                    <b>IDEB:</b> Média das Notas Padronizadas × Taxa de Rendimento ÷ 10
+                </li>
+                <li>
+                    <b>Nível de Proficiência Adequado:</b> LP ≥ 200 | Matemática ≥ 225
+                </li>
+            </ul>
+        </div>
         <form id="formIniciais" autocomplete="off">
             <table>
                 <tr>
@@ -109,12 +108,26 @@
             </table>
             <button class="botao" type="button" id="btnCalcularIni">Calcular</button>
         </form>
-        <div class="obs">
-            Nível de Proficiência Adequado — LP ≥ 200 | Matemática ≥ 225
-        </div>
     </div>
     <!-- ANOS FINAIS -->
     <div class="tab-content" id="tab1">
+        <div class="instrucoes" id="inst1">
+            <b>Como calcular IDEB – Anos Finais:</b>
+            <ul style="padding-left: 20px; margin: 7px 0 0 0;">
+                <li>Preencha as proficiências de <b>LP</b> e <b>Matemática</b> (<b>0 a 400</b>).</li>
+                <li>Preencha a <b>Taxa de Rendimento (%)</b> (ex: 91.5).</li>
+                <li>
+                    <b>Nota Padronizada:</b><br>
+                    <span style="color:#195bb5">((Proficiência - 100) / (400 - 100)) × 10</span>
+                </li>
+                <li>
+                    <b>IDEB:</b> Média das Notas Padronizadas × Taxa de Rendimento ÷ 10
+                </li>
+                <li>
+                    <b>Nível de Proficiência Adequado:</b> LP ≥ 275 | Matemática ≥ 300
+                </li>
+            </ul>
+        </div>
         <form id="formFinais" autocomplete="off">
             <table>
                 <tr>
@@ -143,9 +156,6 @@
             </table>
             <button class="botao" type="button" id="btnCalcularFin">Calcular</button>
         </form>
-        <div class="obs">
-            Nível de Proficiência Adequado — LP ≥ 275 | Matemática ≥ 300
-        </div>
     </div>
 </div>
 <script>
@@ -222,4 +232,5 @@ document.getElementById('btnCalcularFin').addEventListener('click', calculaIDEBF
 </script>
 </body>
 </html>
+
 
