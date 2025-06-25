@@ -67,13 +67,13 @@
             <b>Como calcular IDEB – Anos Iniciais:</b>
             <ul style="padding-left: 20px; margin: 7px 0 0 0;">
                 <li>Preencha as proficiências de <b>LP</b> e <b>Matemática</b> (<b>0 a 400</b>).</li>
-                <li>Preencha a <b>Taxa de Rendimento (%)</b> (ex: 93.2).</li>
+                <li>Preencha o <b>Indicador de Rendimento</b> (ex: 0,93 para 93%).</li>
                 <li>
-                    <b>Nota Padronizada:</b><br>
-                    <span style="color:#195bb5">((Proficiência - 49) / (324 - 49)) × 10</span>
+                    <b>Nota Padronizada LP:</b> <span style="color:#195bb5">((Proficiência - 49) / (324 - 49)) × 10</span><br>
+                    <b>Nota Padronizada Matemática:</b> <span style="color:#195bb5">((Proficiência - 60) / (322 - 60)) × 10</span>
                 </li>
                 <li>
-                    <b>IDEB:</b> Média das Notas Padronizadas × Taxa de Rendimento ÷ 100
+                    <b>IDEB:</b> Média das Notas Padronizadas × Indicador de Rendimento
                 </li>
                 <li>
                     <b>Nível de Proficiência Adequado:</b> LP ≥ 200 | Matemática ≥ 225
@@ -98,8 +98,8 @@
                     <td id="nota_pad_ini_mat">-</td>
                 </tr>
                 <tr>
-                    <th>Taxa de Rendimento (%)</th>
-                    <td colspan="2"><input type="number" step="0.01" min="0" max="100" id="rendimento_ini" placeholder="Ex: 93.2"></td>
+                    <th>Indicador de Rendimento</th>
+                    <td colspan="2"><input type="number" step="0.01" min="0" max="1" id="rendimento_ini" placeholder="Ex: 0,93"></td>
                 </tr>
                 <tr>
                     <th>IDEB</th>
@@ -115,13 +115,13 @@
             <b>Como calcular IDEB – Anos Finais:</b>
             <ul style="padding-left: 20px; margin: 7px 0 0 0;">
                 <li>Preencha as proficiências de <b>LP</b> e <b>Matemática</b> (<b>0 a 400</b>).</li>
-                <li>Preencha a <b>Taxa de Rendimento (%)</b> (ex: 91.5).</li>
+                <li>Preencha o <b>Indicador de Rendimento</b> (ex: 0,91 para 91%).</li>
                 <li>
-                    <b>Nota Padronizada:</b><br>
+                    <b>Nota Padronizada LP e Matemática:</b><br>
                     <span style="color:#195bb5">((Proficiência - 100) / (400 - 100)) × 10</span>
                 </li>
                 <li>
-                    <b>IDEB:</b> Média das Notas Padronizadas × Taxa de Rendimento ÷ 100
+                    <b>IDEB:</b> Média das Notas Padronizadas × Indicador de Rendimento
                 </li>
                 <li>
                     <b>Nível de Proficiência Adequado:</b> LP ≥ 275 | Matemática ≥ 300
@@ -146,8 +146,8 @@
                     <td id="nota_pad_fin_mat">-</td>
                 </tr>
                 <tr>
-                    <th>Taxa de Rendimento (%)</th>
-                    <td colspan="2"><input type="number" step="0.01" min="0" max="100" id="rendimento_fin" placeholder="Ex: 91.5"></td>
+                    <th>Indicador de Rendimento</th>
+                    <td colspan="2"><input type="number" step="0.01" min="0" max="1" id="rendimento_fin" placeholder="Ex: 0,91"></td>
                 </tr>
                 <tr>
                     <th>IDEB</th>
@@ -169,11 +169,16 @@ function showTab(i) {
     });
 }
 
-// Fórmulas
-function notaPadronizadaIniciais(proficiencia) {
+// Nota padronizada anos iniciais - CORTES DIFERENTES
+function notaPadronizadaIniciaisLP(proficiencia) {
     if (isNaN(proficiencia)) return "-";
     return (((proficiencia - 49) / (324 - 49)) * 10).toFixed(2).replace('.',',');
 }
+function notaPadronizadaIniciaisMAT(proficiencia) {
+    if (isNaN(proficiencia)) return "-";
+    return (((proficiencia - 60) / (322 - 60)) * 10).toFixed(2).replace('.',',');
+}
+// Nota padronizada anos finais (igual para as duas disciplinas)
 function notaPadronizadaFinais(proficiencia) {
     if (isNaN(proficiencia)) return "-";
     return (((proficiencia - 100) / (400 - 100)) * 10).toFixed(2).replace('.',',');
@@ -185,15 +190,15 @@ function calculaIDEBIniciais() {
     const mat_ini = parseFloat(document.getElementById('mat_ini').value.replace(',','.'));
     const rendimento_ini = parseFloat(document.getElementById('rendimento_ini').value.replace(',','.'));
 
-    document.getElementById('nota_pad_ini_lp').innerText = notaPadronizadaIniciais(lp_ini);
-    document.getElementById('nota_pad_ini_mat').innerText = notaPadronizadaIniciais(mat_ini);
+    document.getElementById('nota_pad_ini_lp').innerText = notaPadronizadaIniciaisLP(lp_ini);
+    document.getElementById('nota_pad_ini_mat').innerText = notaPadronizadaIniciaisMAT(mat_ini);
 
-    const nota_lp = parseFloat(notaPadronizadaIniciais(lp_ini).replace(',','.'));
-    const nota_mat = parseFloat(notaPadronizadaIniciais(mat_ini).replace(',','.'));
+    const nota_lp = parseFloat(notaPadronizadaIniciaisLP(lp_ini).replace(',','.'));
+    const nota_mat = parseFloat(notaPadronizadaIniciaisMAT(mat_ini).replace(',','.'));
     let ideb_ini = "-";
     if (!isNaN(rendimento_ini) && !isNaN(nota_lp) && !isNaN(nota_mat)) {
         const media = ((nota_lp + nota_mat) / 2);
-        ideb_ini = ((media * rendimento_ini) / 100).toFixed(2).replace('.',',');
+        ideb_ini = (media * rendimento_ini).toFixed(2).replace('.',',');
     }
     document.getElementById('ideb_ini').innerText = ideb_ini;
 }
@@ -211,7 +216,7 @@ function calculaIDEBFinais() {
     let ideb_fin = "-";
     if (!isNaN(rendimento_fin) && !isNaN(nota_lp) && !isNaN(nota_mat)) {
         const media = ((nota_lp + nota_mat) / 2);
-        ideb_fin = ((media * rendimento_fin) / 100).toFixed(2).replace('.',',');
+        ideb_fin = (media * rendimento_fin).toFixed(2).replace('.',',');
     }
     document.getElementById('ideb_fin').innerText = ideb_fin;
 }
@@ -228,5 +233,6 @@ document.getElementById('btnCalcularFin').addEventListener('click', calculaIDEBF
 </script>
 </body>
 </html>
+
 
 
